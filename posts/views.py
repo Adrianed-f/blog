@@ -3,5 +3,7 @@ from django.http import HttpResponse
 
 
 def index(request):
-   return HttpResponse("Posts index view")
+    if request.GET.get("key") == "test":
+        return HttpResponse("Posts with test key")
+    return HttpResponse("Posts index view")
 # Create your views here.
