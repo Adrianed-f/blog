@@ -24,6 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('profiles/', profiles, name='profiles'),
-    path('profiles/posts', profiles_post, name='profiles_post')
+    path('profiles/posts/', profiles_post, name='profiles_post')
 ]
 
