@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-in1(n9i4s^b7ujzh8gr7v92jge$a2)e%4e2$1sj6jxs^)zvclq'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -78,7 +79,7 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.environ.get('DATABASE_PATH'),
     }
 }
 
@@ -100,6 +101,27 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+LOGGING = {
+   'version': 1,
+   'disable_existing_loggers': False,
+   'handlers': {
+       'console': {
+           'class': 'logging.StreamHandler',
+       },
+   },
+   'loggers': {
+       '': {
+           'handlers': ['console'],
+           'level': 'INFO',
+       },
+       'django.db.backends': {
+           'handlers': ['console'],
+           'level': 'ERROR',
+       }
+   }
+}
+
 
 
 # Internationalization
@@ -123,3 +145,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ENV = os.environ.get('ENV_ENV')
+
+SOME_NUMBER = os.environ.get('FIRST_SET')
+FIRST_RESULT = os.environ.get('SECOND_SET')
+SECOND_RESULT = os.environ.get('THIRD_SET')
