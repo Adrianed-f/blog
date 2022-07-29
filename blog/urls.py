@@ -19,11 +19,23 @@ from django.urls import path
 from posts.views import index
 from profiles.views import profiles
 from profiles.views import profiles_post
+from shop.views import shop
+from shop.views import filter_by_price
+# from shop.views import filter_by_cost_purchase
+# from shop.views import filter_by_purchases
+from posts.views import posts_author
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('profiles/', profiles, name='profiles'),
-    path('profiles/posts/', profiles_post, name='profiles_post')
+    path('profiles/posts/', profiles_post, name='profiles_post'),
+    path('shop/', shop, name='shop'),
+    path('posts/author/', posts_author, name='posts_author'),
+    path('filter/cost/', filter_by_price, name='filter_by_price'),
+    # path('filter/cost/purchase/', filter_by_cost_purchase, name='filter_by_cost_purchase'),
+    # path('filter/purchases/', filter_by_purchases, name='filter_by_purchases')
+
+
 ]
 

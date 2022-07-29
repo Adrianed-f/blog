@@ -30,19 +30,5 @@ class Tag(models.Model):
         return f"Tag: {self.title} with {self.posts.count()} posts"
 
 
-class Address(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="addresses",
-        blank=True,
-        null=True
-    )
-
-    city = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(
-        auto_now_add=True, db_index=True
-    )
-
 
 # Create your models here.
