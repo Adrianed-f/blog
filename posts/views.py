@@ -1,19 +1,25 @@
-from django.shortcuts import render
+
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
+from posts.forms import PostForm
 from posts.models import Post
 
 
 def index(request):
-    if request.GET.get('title'):
-        post_list = Post.objects.filter(title=request.GET.get('title'))
-    elif request.GET.get('slug'):
-        post_list = Post.objects.filter(slug=request.GET.get('slug'))
+    posts = Post.objects.all()
+    return render(request, "index.html", {"posts": posts})
+
+
+def post_add(request):
+    if not request.user.is_authenticated:
+        return HttpResponse("You aren't authenticated!")
+
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            Post.objects.create(author=request.user, **form.cleaned_data)
+            return redirect("index")
     else:
-        post_list = Post.objects.all()
-    return HttpResponse(",".join([x.title for x in post_list]))
-
-
-def posts_author(request):
-    posts_author_list = Post.objects.filter(user_id=request.user)
-    return HttpResponse(",".join([x.title for x in posts_author_list]))
-# Create your views here.
+        form = PostForm()
+    return render(request, "post_add.html", {"form": form})

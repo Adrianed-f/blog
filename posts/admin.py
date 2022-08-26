@@ -1,19 +1,16 @@
 from django.contrib import admin
 
-from posts.models import Post
-from posts.models import Tag
+from posts.models import Post, Tag
 
 
 @admin.register(Post)
-class PostUser(admin.ModelAdmin):
-    list_display = ("user", "title", "slug", "created_at")
-    fields = ("user", "title", "slug", "text", "created_at")
+class PostAdmin(admin.ModelAdmin):
+    list_display = ("author", "title", "created_at")
+    list_filter = ("created_at",)
+    fields = ("author", "title", "slug", "text", "created_at")
     readonly_fields = ("created_at",)
     search_fields = ("title", "slug", "text")
-    raw_id_fields = ("user",)
-
-
-# Register your models here.
+    raw_id_fields = ("author",)
 
 
 @admin.register(Tag)

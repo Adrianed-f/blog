@@ -1,34 +1,56 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.conf import settings
 import logging
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import logout, login, authenticate
 
+from profiles.forms import RegisterForm, LoginForm
+from profiles.services import create_user
 
 logger = logging.getLogger(__name__)
 
-logger.info("Informational message")
-
-if int(settings.SOME_NUMBER) % 2 == 0:
-    logger.info(f"RESULT:   {settings.FIRST_RESULT}")
-else:
-    logger.info(f"RESULT:   {settings.SECOND_RESULT}")
-
 
 def profiles(request):
-    logger.info(settings.ENV)
-    if request.GET.get("key") == "test":
-        return HttpResponse("Posts with test key")
-    elif request.GET.get("djan") == "go":
-        return HttpResponse("Posts Django")
-    return HttpResponse("Posts index view")
+    return HttpResponse("Profile view")
 
 
-def profiles_post(request):
-    logger.info(settings.ENV)
-    logger.info("function starting")
-    for key, value in request.POST.items():
-        logger.info(f"Posts with {key} {value}")
-        return HttpResponse(f"Posts with {key} {value}")
+def register(request):
+    if request.user.is_authenticated:
+        return redirect("/")
 
-# Create your views here.
-# Create your views here.
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            create_user(
+                email=form.cleaned_data["email"],
+                username=form.cleaned_data["email"],
+                first_name=form.cleaned_data["first_name"],
+                last_name=form.cleaned_data["last_name"],
+                password=form.cleaned_data["password"],
+            )
+            return redirect("/")
+    else:
+        form = RegisterForm()
+    return render(request, "register.html", {"form": form})
+
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect("/")
+
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(request=request, **form.cleaned_data)
+            if user is None:
+                return HttpResponse("BadRequest", status=400)
+            login(request, user)
+            return redirect("index")
+    else:
+        form = LoginForm()
+    return render(request, "login.html", {"form": form})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("index")

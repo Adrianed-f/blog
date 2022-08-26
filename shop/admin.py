@@ -1,7 +1,7 @@
+
 from django.contrib import admin
 
-from shop.models import Product
-from shop.models import Purchase
+from shop.models import Product, Purchase
 
 
 class PurchaseInline(admin.TabularInline):
@@ -10,14 +10,11 @@ class PurchaseInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("title", "color", "cost")
+    list_display = ("title", "color", "cost", "external_id", "link")
     search_fields = ("title",)
     inlines = [
         PurchaseInline,
     ]
-
-
-# Register your models here.
 
 
 @admin.register(Purchase)

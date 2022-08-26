@@ -13,29 +13,29 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
-from posts.views import index
-from profiles.views import profiles
-from profiles.views import profiles_post
-from shop.views import shop
-from shop.views import filter_by_price
-# from shop.views import filter_by_cost_purchase
-# from shop.views import filter_by_purchases
-from posts.views import posts_author
+from posts.views import index, post_add
+from profiles.views import profiles, register, login_view, logout_view
+from shop.views import products
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', index, name='index'),
-    path('profiles/', profiles, name='profiles'),
-    path('profiles/posts/', profiles_post, name='profiles_post'),
-    path('shop/', shop, name='shop'),
-    path('posts/author/', posts_author, name='posts_author'),
-    path('filter/cost/', filter_by_price, name='filter_by_price'),
-    # path('filter/cost/purchase/', filter_by_cost_purchase, name='filter_by_cost_purchase'),
-    # path('filter/purchases/', filter_by_purchases, name='filter_by_purchases')
-
-
+    path("admin/", admin.site.urls),
+    path("", products, name="index"),
+    path("post-add/", post_add, name="post-add"),
+    path("profiles/", profiles, name="profiles"),
+    path("register/", register, name="register"),
+    path("login/", login_view, name="login"),
+    path("logout/", logout_view, name="logout"),
+    path("api/", include("api.urls", namespace="api")),
 ]
 
+if settings.DEBUG:
+    from django.conf.urls.static import static
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+    # Serve static and media files from development server
+    urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,16 +1,27 @@
 from django.conf import settings
 from django.db import models
 
-COLOR_CHOICES = (('red', "Red color"), ('green', 'Green color'), ('white', 'White color'))
+COLOR_CHOICES = (
+    ("red", "Red color"),
+    ("green", "Green color"),
+    ("white", "White color"),
+)
 
 
 class Product(models.Model):
     title = models.CharField(max_length=200)
-    cost = models.IntegerField()
-    color = models.CharField(max_length=200, choices=COLOR_CHOICES, blank=True, null=True)
+    cost = models.DecimalField(decimal_places=2, max_digits=6)
+
+    external_id = models.CharField(max_length=200, blank=True, null=True)
+    link = models.CharField(max_length=200, blank=True, null=True)
+
+    image = models.ImageField(upload_to="products/", blank=True, null=True)
+    color = models.CharField(
+        max_length=200, choices=COLOR_CHOICES, blank=True, null=True
+    )
 
     def __str__(self):
-        return f"{self.title}"
+        return f"Product: {self.title}"
 
 
 class Purchase(models.Model):
