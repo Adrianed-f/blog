@@ -91,7 +91,7 @@ DATABASES = {
         "NAME": "django",
         "USER": "adrianed1",
         "PASSWORD": "5463779A",
-        "HOST": "localhost",
+        "HOST": os.environ.get("DATABASE_HOST","localhost"),
         "PORT": 5432,
     }
 }
